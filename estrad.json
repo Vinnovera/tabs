@@ -1,0 +1,85 @@
+{
+    "css": {
+        "watch":        true,
+        "build":        true,
+        "preprocessor": "stylus",
+        "settings": {
+            "define": {},
+            "url": "url",
+            "compress": false
+        },
+        "paths": {
+            "listen": [
+                "stylus/*.styl"
+            ],
+            "src": [
+                "stylus/main.styl"
+            ],
+            "dest": "./css"
+        }
+    },
+
+    "html": {
+        "build": true,
+        "prettify": {
+            "indent_size": 1,
+            "indent_char": "\t",
+            "preserve_newlines": false
+        },
+        "paths": {
+            "src": [
+                "./**/*.html",
+                "!./modules/**/*.html",
+                "!./node_modules/**/*.html"
+            ],
+            "dest": "./"
+        }
+    },
+
+    "images": {
+        "watch": false,
+        "build": true,
+        "paths": {
+            "listen": [
+                "images/**/*.*"
+            ],
+            "dest": "../build/images"
+        }
+    },
+
+    "js": {
+        "watch": false,
+        "build": true,
+        "paths": {
+            "src": [],
+            "listen": [
+                "js/**/*.js",
+                "modules/**/*.js",
+                "!/node_modules/**/*.js"
+            ]
+        }
+    },
+
+    "server": {
+        "start": true,
+        "proxy": false,
+        "port":  8000,
+        "template": {
+            "templateSettings": {}
+        }
+    },
+
+    "static": {
+        "build": true,
+        "paths": {
+            "src": [ "**/*.js", "**/*.ttf", "**/*.eot", "**/*.woff", "**/*.gif", "**/*.png", "**/*.jpg", "**/*.svg"],
+            "dest": ""
+        }
+    },
+
+    "dir": {
+          "src": "src/",
+          "partials": "src/modules",
+          "dest": "build/"
+      }
+}

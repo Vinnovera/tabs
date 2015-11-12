@@ -1,0 +1,9 @@
+/**
+ * Calculate font size in EM
+ * @param  Int     $size   Target font size in PX
+ * @param  Int     $base   Optional: parent font size in PX, defaults to body font size
+ * @return String          The font size ($size) in EM
+ */
+_em(size, base = mq-base-font-size) {
+	return unit(size / base, em);
+}
