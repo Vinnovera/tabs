@@ -1,11 +1,12 @@
 !function(w, d, $) {
 
-	var $tabBar, $tabs, iAmSuper = false. iAmDouble = false;
+	var
+		iAmSuper    = false,
+		iAmDouble   = false,
+		tabClass    = '.tab',
+		$tabs       = $(tabClass); //for cloneRandomTab
 
 	$(d).on('ready', function() {
-		$tabBar = $('.tab-bar'),
-		$tabs = $('.tab');
-
 		sortTabs();
 		bindEvents();
 	});
@@ -23,6 +24,9 @@
 	}
 
 	function sortTabs(){
+		var
+			$tabBar = $('.tab-bar');
+
 		$tabBar.sortable({
 				axis: "x",
 				placeholder: "tab placeholder",
@@ -39,66 +43,96 @@
 				},
 		});
 	
-		$tabs.disableSelection();
+		$(tabClass).disableSelection();
 	}
 
 	function onPinClick(e){
 		e.preventDefault();
-		var $tab = $(e.target).closest('.tab');
+		togglePinned($(e.target));
+	}
 
-		$tab.toggleClass('pinned');
+	function togglePinned($target) {
+		$target = chooseTarget($target);
+		$target.toggleClass('pinned');
 	}
 
 	function onTabContentClick(e){
 		e.preventDefault();
-		var $tab = $(e.target).closest('.tab');
+		setActiveTab($(e.target));
+	}
 
-		$('.tab').removeClass('active');
-		$tab.addClass('active');
+	function setActiveTab($target) {
+		$(tabClass).removeClass('active');
+
+		$target = chooseTarget($target);
+
+		$target.addClass('active');
 		resizeTabBar();
 	}
 
 	function onCloseClick(e){
 		e.preventDefault();
-		var $tab = $(e.target).closest('.tab');
+		closeTab($(e.target));
+	}
 
-		$tab.addClass('closing');
-		setTimeout(function(){ $tab.remove(); },500);
+	function closeTab($target) {
+		$target = chooseTarget($target);
+
+		$target.addClass('closing');
+
+		var timer = setTimeout( function(){
+			$target.remove();
+			clearTimeout(timer);
+		}, 500);
+
 		resizeTabBar();
 	}
 
 	function onAddNewClick(e){
+		e.preventDefault();
+		cloneRandomTab();
+	}
 
-			e.preventDefault();
-			var randomIndex = Math.floor(Math.random() * $tabs.length),
-				tabClone = $tabs.eq(randomIndex);
-				
-			tabClone.clone().removeClass('active pinned closing').appendTo( $tabBar );
-			resizeTabBar();
+	function cloneRandomTab() {
+		var
+			randomIndex     = Math.floor(Math.random() * $(tabClass).length),
+			$tabClone       = $tabs.eq(randomIndex),
+			$tabBar         = $('.tab-bar');
+
+		$tabClone.clone()
+				.removeClass('active pinned closing')
+				.appendTo($tabBar);
+
+		resizeTabBar();
 	}
 
 	function onCloseAllClick(e){
-			e.preventDefault();
-			$('.tab').addClass('closing');
-			setTimeout(function(){
-				$('.tab').remove();
-				cleanTabBar();
-				//resizeTabBar();
-			},500);
-			
+		e.preventDefault();
+		$('.tab').addClass('closing');
+		setTimeout(function(){
+			$('.tab').remove();
+			cleanTabBar();
+			//resizeTabBar();
+		},500);
 	}
 
 	function onKeepActiveClick(e){
-			e.preventDefault();
-			$('.tab:not(.active)').addClass('closing');
-			setTimeout(function(){
-				$('.tab:not(.active)').remove();
-				if (!iAmSuper || !iAmDouble) {
-					cleanTabBar();
-					resizeTabBar();
-				}
-			},500);
-			
+		e.preventDefault();
+		keepActiveTab();
+	}
+
+	function keepActiveTab() {
+		$(tabClass + ':not(.active)').addClass('closing');
+
+		var timer = setTimeout(function(){
+			$(tabClass + ':not(.active)').remove();
+
+			if (!iAmSuper || !iAmDouble) {
+				cleanTabBar();
+				resizeTabBar();
+			}
+			clearTimeout(timer);
+		},500);
 	}
 
 	function onKeepPinnedClick(e){
@@ -147,6 +181,13 @@
 		}*/
 		
 		$('.tab-bar').width(tabsWidth);
+	}
+
+	function chooseTarget($target) {
+		if(!$target.hasClass(tabClass)) {
+			$target = $target.closest(tabClass);
+		}
+		return $target;
 	}
 
 	
