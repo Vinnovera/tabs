@@ -10,7 +10,7 @@
         },
         "paths": {
             "listen": [
-                "stylus/*.styl"
+                "stylus/**/*.styl"
             ],
             "src": [
                 "stylus/main.styl"
@@ -49,7 +49,7 @@
 
     "js": {
         "watch": false,
-        "build": true,
+        "build": false,
         "paths": {
             "src": [],
             "listen": [

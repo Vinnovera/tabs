@@ -1,0 +1,14 @@
+even-blocks(max)
+	li
+		//display inline-block
+	for li in 1
+		li:nth-child(1):nth-last-child({li})
+			width: (100% / li)
+	for li in 2
+		li:nth-child(1):nth-last-child({li})
+		li:nth-child({li}):nth-last-child(1)
+			width: (100% / li)
+	for li in (3..max)
+		li:nth-child(1):nth-last-child({li})
+		li:nth-child(1):nth-last-child({li}) ~li
+			width: (100% / li)
