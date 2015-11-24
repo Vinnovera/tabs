@@ -1,10 +1,12 @@
 !function(w, d, $) {
 
 	var
-		iAmSuper    = false,
-		iAmDouble   = false,
-		tabClass    = '.tab',
-		$tabs       = $(tabClass); //for cloneRandomTab
+		iAmSuper    	= false,
+		iAmDouble	 	= false,
+		tabWrapperClass = '.tab-bar',
+		tabClass		= '.tab',
+		tabClass    	= tabWrapperClass + ' ' +tabClass,
+		$tabs       	= $(tabClass); //for cloneRandomTab
 
 	$(d).on('ready', function() {
 		sortTabs();
@@ -24,19 +26,17 @@
 	}
 
 	function sortTabs(){
-		var
-			$tabBar = $('.tab-bar');
 
-		$tabBar.sortable({
+		$(tabWrapperClass).sortable({
 				axis: "x",
 				placeholder: "tab placeholder",
 				sort: function( event, ui ) {
-					$tabBar.addClass('sorting-tab');
+					$(tabClass).addClass('sorting-tab');
 					ui.item.removeClass('moved');
 					ui.item.addClass('sorting');
 				},
 				stop: function( event, ui ) {
-					$tabBar.removeClass('sorting-tab');
+					$(tabClass).removeClass('sorting-tab');
 					ui.item.addClass('moved');
 					ui.item.attr('style','');
 					ui.item.removeClass('sorting');
@@ -67,25 +67,51 @@
 		$target = chooseTarget($target);
 
 		$target.addClass('active');
-		resizeTabBar();
+		var timer = setTimeout( function(){
+			resizeTabBar();
+			clearTimeout(timer);
+		}, 200);
+		
 	}
 
 	function onCloseClick(e){
 		e.preventDefault();
-		closeTab($(e.target));
+		closeTabs($(e.target));
 	}
 
-	function closeTab($target) {
+	function onCloseAllClick(e){
+		e.preventDefault();
+		closeTabs($(tabClass));
+	}
+
+	function onKeepActiveClick(e){
+		e.preventDefault();
+		closeTabs($(tabClass),'.active');
+	}
+
+	function onKeepPinnedClick(e){
+		e.preventDefault();
+		closeTabs($(tabClass),'.pinned');
+	}
+
+	function closeTabs($target,exceptThis) {
+		
 		$target = chooseTarget($target);
+
+		if (exceptThis) {
+			$target = $target.not(exceptThis);
+		}
 
 		$target.addClass('closing');
 
 		var timer = setTimeout( function(){
 			$target.remove();
+			var timer2 = setTimeout(function(){
+				resizeTabBar();
+				clearTimeout(timer2);
+			},200);
 			clearTimeout(timer);
 		}, 500);
-
-		resizeTabBar();
 	}
 
 	function onAddNewClick(e){
@@ -96,91 +122,68 @@
 	function cloneRandomTab() {
 		var
 			randomIndex     = Math.floor(Math.random() * $(tabClass).length),
-			$tabClone       = $tabs.eq(randomIndex),
-			$tabBar         = $('.tab-bar');
+			$tabClone       = $tabs.eq(randomIndex);
 
 		$tabClone.clone()
-				.removeClass('active pinned closing')
-				.appendTo($tabBar);
+				 .removeClass('active pinned closing')
+				 .appendTo($(tabWrapperClass));
 
 		resizeTabBar();
 	}
 
-	function onCloseAllClick(e){
-		e.preventDefault();
-		$('.tab').addClass('closing');
-		setTimeout(function(){
-			$('.tab').remove();
-			cleanTabBar();
-			//resizeTabBar();
-		},500);
-	}
-
-	function onKeepActiveClick(e){
-		e.preventDefault();
-		keepActiveTab();
-	}
-
-	function keepActiveTab() {
-		$(tabClass + ':not(.active)').addClass('closing');
-
-		var timer = setTimeout(function(){
-			$(tabClass + ':not(.active)').remove();
-
-			if (!iAmSuper || !iAmDouble) {
-				cleanTabBar();
-				resizeTabBar();
-			}
-			clearTimeout(timer);
-		},500);
-	}
-
-	function onKeepPinnedClick(e){
-			e.preventDefault();
-			$('.tab:not(.pinned)').addClass('closing');
-			setTimeout(function(){
-				$('.tab:not(.pinned)').remove();
-				if (!iAmSuper || !iAmDouble) {
-					cleanTabBar();
-					resizeTabBar();
-				}
-			},500);
-	}
-
-	function cleanTabBar(){
-		$tabBar.removeClass('condensed super-condensed');
-		iAmSuper = false;
-		iAmDouble = false;
-	}
-
 	function resizeTabBar(){
 		var
-			viewportWidth = $(w).width(),
-			tabsWidth = ($('.tab').width() - 32) * $('.tab').length,
-			doubleWidth = viewportWidth * 2;
+			tabsWidth = 0;
 
-		/*var tabsWidth = 0;
-		$('.tab').each(function(){
-			tabsWidth = tabsWidth + ($(this).width() - 32);
-		});*/
+		$(tabClass).each(function(){
+			tabsWidth = ($(this).width() -32) + tabsWidth;
+		});
 
-		/*console.log('normal: ' + tabsWidth);
+		toggleCondenseClass(tabsWidth);
 
+		$(tabWrapperClass).width(tabsWidth);
+	}
 
-		if(tabsWidth >= doubleWidth || iAmSuper) {
-			$tabBar.addClass('super-condensed').removeClass('condensed');
-			console.log('double: ' + tabsWidth);
+	function toggleCondenseClass(tabsWidth){
+		var
+			containerWidth = $(tabWrapperClass).parent().width(),
+			doubleWidth = containerWidth * 2;
+
+		if (!tabsWidth) {
+			tabsWidth = 0;
+			$(tabClass).each(function(){
+				tabsWidth = ($(this).width() -32) + tabsWidth;
+			});
+		}
+
+		if(tabsWidth >= doubleWidth || iAmSuper && !iAmDouble) {
+			$(tabWrapperClass)
+				.addClass('super-condensed')
+				.removeClass('condensed');
+			
+			iAmDouble = false;
 			iAmSuper = true;
-		} else if(tabsWidth > viewportWidth && tabsWidth < doubleWidth && !iAmSuper) {
-			$tabBar.addClass('condensed').removeClass('super-condensed');
-			console.log('condensed: ' + tabsWidth);
+			
+			console.log('super-condensed: ' + tabsWidth);
+
+		} else if(tabsWidth > containerWidth && tabsWidth <= doubleWidth && !iAmSuper || iAmDouble ) {
+			$(tabWrapperClass)
+				.addClass('condensed')
+				.removeClass('super-condensed');
+
 			iAmDouble = true;
+			iAmSuper = false;
+
+			console.log('condensed: ' + tabsWidth);
 		}else{
+			$(tabWrapperClass)
+				.removeClass('condensed super-condensed');
+
 			iAmSuper = false;
 			iAmDouble = false;
-		}*/
-		
-		$('.tab-bar').width(tabsWidth);
+
+			console.log('normal: ' + tabsWidth);
+		}
 	}
 
 	function chooseTarget($target) {

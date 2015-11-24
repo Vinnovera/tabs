@@ -1,86 +1,15 @@
+// General styling
 .tab
-	width 180px
-	height 60px
 	display block
 	color cream
 	position relative
 	cursor pointer
-	float left
 	overflow hidden
-	margin-left -32px
-	bottom -7px
-	z-index 1
-	transition bottom .03s ease-out, width .1s ease-in-out
-	animation-name fadeInTab
-	animation-duration .12s
-	/.condensed .tab
-		width 150px
-	/.super-condensed .tab
-	/.condensed.super-condensed .tab
-		width 105px
-	&.placeholder
-		&::before
-		&::after
-			opacity 0
-	//******* Pin *****//
-	.pin
-		width 33%
-		height 16px
-		display block
-		margin 0 auto
-		&::before
-			content ''
-			width 14px
-			height 14px
-			position absolute
-			background blue
-			top 0
-			z-index 10
-			left 50%
-			margin-left -5px
-			border-radius 50%
-			display none
-			border 2px solid blue-dark
-			box-sizing border-box
-			transition background .1s ease-out
-			box-shadow inset 1px 1px 2px rgba(0,0,0,0.4)
-		&:hover::before
-				background blue-grey
-				box-shadow inset 1px 2px 2px rgba(0,0,0,0.4)
-		&:active::before
-				background blue
-				
-				
-	&:hover .pin::before
-		display block
-		transform scale(0.8)
-	&.pinned:hover .pin::before
-		transform scale(0.9)
-	&:active, &:focus
-		&::before
-			border-width 2px
-	&.pinned
-		bottom 0
-		&:hover
-			bottom 0
-		.pin
-			&::before
-				background orange
-				box-shadow none
-				display block
-			&:active::before
-				background darken(orange,20%)
-				box-shadow inset 1px 2px 2px rgba(0,0,0,0.4)			
-			
-			
-	//******* Pin *****//
-
 	.tab-content
 	.close
 		z-index 2
 	.tab-content
 		position relative
-		padding 1px 16% 0
 		>.title
 			white-space nowrap
 			overflow hidden
@@ -114,6 +43,95 @@
 		transition opacity .06s linear
 	&.active .close
 		background-image url('../images/close_icon_8px_active.svg')
+	
+	//icons
+	&.type-search
+		.icon
+			background-image url('../images/search_icon_16px.svg')
+		&.active
+			.icon
+				background-image url('../images/search_icon_16px_active.svg')
+	&.type-volume
+		.icon
+			background-image url('../images/volume_icon_16px.svg')
+		&.active
+			.icon
+				background-image url('../images/volume_icon_16px_active.svg')
+
+//Tab in tab-bar
+.tab-bar .tab
+	width 180px
+	height 60px
+	float left
+	margin-left -32px
+	bottom -7px
+	z-index 1
+	transition bottom .03s ease-out, width .08s ease-in-out
+	animation-name fadeInTab
+	animation-duration .1s
+	background none!important
+	/.condensed .tab
+		width 150px
+	/.super-condensed .tab
+	/.condensed.super-condensed .tab
+		width 105px
+	&.placeholder
+		&::before
+		&::after
+			opacity 0
+	.tab-content
+		padding 1px 16% 0
+	//******* Pin *****//
+	.pin
+		width 33%
+		height 16px
+		display block
+		margin 0 auto
+		&::before
+			content ''
+			width 14px
+			height 14px
+			position absolute
+			background blue
+			top 0
+			z-index 10
+			left 50%
+			margin-left -5px
+			border-radius 50%
+			display none
+			border 2px solid blue-dark
+			box-sizing border-box
+			transition background .1s ease-out
+			box-shadow inset 1px 1px 2px rgba(0,0,0,0.4)
+		&:hover::before
+				background blue-grey
+				box-shadow inset 1px 2px 2px rgba(0,0,0,0.4)
+		&:active::before
+				background blue
+				
+	&:hover .pin::before
+		display block
+		transform scale(0.8)
+	&.pinned:hover .pin::before
+		transform scale(0.9)
+	&:active, &:focus
+		&::before
+			border-width 2px
+	&.pinned
+		bottom 0
+		&:hover
+			bottom 0
+		.pin
+			&::before
+				background orange
+				box-shadow none
+				display block
+			&:active::before
+				background darken(orange,20%)
+				box-shadow inset 1px 2px 2px rgba(0,0,0,0.4)			
+			
+			
+	//************//
 
 	&:hover
 	&.sorting
@@ -166,19 +184,6 @@
 		bottom -9px
 	&.moved
 		animation-name none
-
-	&.type-search
-		.icon
-			background-image url('../images/search_icon_16px.svg')
-		&.active
-			.icon
-				background-image url('../images/search_icon_16px_active.svg')
-	&.type-volume
-		.icon
-			background-image url('../images/volume_icon_16px.svg')
-		&.active
-			.icon
-				background-image url('../images/volume_icon_16px_active.svg')
 		
 	
 	
