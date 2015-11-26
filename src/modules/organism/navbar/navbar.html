@@ -1,8 +1,8 @@
 <div class="nav-bar">
 	<button class="navigate-left arrow-left">Previous</button>
 	<button class="navigate-right arrow-right">Next</button>
-	<button class="arrow-btn arrow-down">Open list</button>
-	<div class="context-menu">
+	<button role="context-menu" class="arrow-btn arrow-down toggle-context-menu" aria-contextmenu="#tab-list">Open list</button>
+	<div id="tab-list" class="context-menu">
 		<ul class="tab-list">
 			{=part.molecule.tab.1}
 			{=part.molecule.tab.2}

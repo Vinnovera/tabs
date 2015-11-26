@@ -2,25 +2,61 @@
 @keyframes fadeInTab
 	from
 		opacity 0
-		bottom -9px
+		bottom -32px
 		  
 	to
 		opacity 1
-		bottom -7px
+		bottom 0px
 		
 @keyframes fadeOutTab
 	0%
 		opacity 1
 		bottom -7px
-		width 180px
+		width $tabWidth
 	33%
 		opacity 1
 		bottom -8px
-		width 180px
+		width $tabWidth
 	50%
 		opacity 0
 		bottom -10px
-		width 180px
+		width $tabWidth
+	100%
+		opacity 0
+		bottom - 9px
+		width 0px
+		
+@keyframes fadeOutTabCondensed
+	0%
+		opacity 1
+		bottom -7px
+		width $tabWidthCondensed
+	33%
+		opacity 1
+		bottom -8px
+		width $tabWidthCondensed
+	50%
+		opacity 0
+		bottom -10px
+		width $tabWidthCondensed
+	100%
+		opacity 0
+		bottom - 9px
+		width 0px
+		
+@keyframes fadeOutTabSuperCondensed
+	0%
+		opacity 1
+		bottom -7px
+		width $tabWidthSuperCondensed
+	33%
+		opacity 1
+		bottom -8px
+		width $tabWidthSuperCondensed
+	50%
+		opacity 0
+		bottom -10px
+		width $tabWidthSuperCondensed
 	100%
 		opacity 0
 		bottom - 9px

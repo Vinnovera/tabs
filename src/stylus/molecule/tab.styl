@@ -57,60 +57,67 @@
 		&.active
 			.icon
 				background-image url('../images/volume_icon_16px_active.svg')
-
+	button
+		background none
+		border none
+		box-shadow none
+		cursor pointer
+		margin 0
+		padding 0
+		color inherit
+		outline 0
 //Tab in tab-bar
 .tab-bar .tab
 	width 180px
 	height 60px
 	float left
 	margin-left -32px
-	bottom -7px
+	bottom -6px
 	z-index 1
-	transition bottom .03s ease-out, width .08s ease-in-out
+	transition bottom .08s ease-out, width .08s ease-in-out
 	animation-name fadeInTab
 	animation-duration .1s
 	background none!important
-	/.condensed .tab
-		width 150px
-	/.super-condensed .tab
-	/.condensed.super-condensed .tab
-		width 105px
 	&.placeholder
 		&::before
 		&::after
 			opacity 0
 	.tab-content
-		padding 1px 16% 0
+		margin 1px 16% 0
 	//******* Pin *****//
 	.pin
 		width 33%
 		height 16px
 		display block
 		margin 0 auto
+		text-indent -9999px
 		&::before
 			content ''
 			width 14px
 			height 14px
 			position absolute
 			background blue
-			top 0
+			top -6px
 			z-index 10
+			opacity 0
 			left 50%
 			margin-left -5px
 			border-radius 50%
-			display none
+			display block
 			border 2px solid blue-dark
 			box-sizing border-box
-			transition background .1s ease-out
+			transition background .1s ease-out, top .06s linear
 			box-shadow inset 1px 1px 2px rgba(0,0,0,0.4)
 		&:hover::before
 				background blue-grey
 				box-shadow inset 1px 2px 2px rgba(0,0,0,0.4)
+				z-index 10
 		&:active::before
 				background blue
 				
 	&:hover .pin::before
-		display block
+		opacity 1
+		top -1px
 		transform scale(0.8)
 	&.pinned:hover .pin::before
 		transform scale(0.9)
@@ -126,6 +133,9 @@
 				background orange
 				box-shadow none
 				display block
+				z-index 10
+				opacity 1
+				top 0
 			&:active::before
 				background darken(orange,20%)
 				box-shadow inset 1px 2px 2px rgba(0,0,0,0.4)			
@@ -135,7 +145,7 @@
 
 	&:hover
 	&.sorting
-		bottom -6px
+		bottom -5px
 		&:before
 			background lighten(blue,8%)
 		.close
@@ -173,10 +183,11 @@
 		color blue
 		z-index 99999
 		bottom 0
-		width 180px!important
+		width $tabWidth!important
 		&:before
 			background cream
 	&.closing
+	&.closing.active
 		animation-name fadeOutTab!important
 		animation-duration .16s
 		animation-timing-function ease-in
@@ -184,6 +195,19 @@
 		bottom -9px
 	&.moved
 		animation-name none
+	/.condensed .tab
+		width $tabWidthCondensed
+		&.closing
+			animation-name fadeOutTabCondensed!important
+			&.active
+				animation-name fadeOutTab!important
+	/.super-condensed .tab
+	/.condensed.super-condensed .tab
+		width $tabWidthSuperCondensed
+		&.closing
+			animation-name fadeOutTabSuperCondensed!important
+			&.active
+				animation-name fadeOutTab!important
 		
 	
 	

@@ -11,6 +11,8 @@
 	$(d).on('ready', function() {
 		sortTabs();
 		bindEvents();
+		positionTabBar(0);
+		resizeTabBar();
 	});
 
 	function bindEvents() {
@@ -18,6 +20,9 @@
 		$(d).on('click', '.close-all', onCloseAllClick);
 		$(d).on('click', '.close-all-but-active', onKeepActiveClick);
 		$(d).on('click', '.close-all-but-pinned', onKeepPinnedClick);
+		$(d).on('click', 'button.navigate-right', onNextClick);
+		$(d).on('click', 'button.navigate-left', onPrevClick);
+		$(d).on('click', 'button.toggle-context-menu', onContextMenuClick);
 
 		//Tab clicks
 		$(d).on('click', '.tab-content', onTabContentClick);
@@ -52,26 +57,147 @@
 	}
 
 	function togglePinned($target) {
+		var $pinBtn = $('.close-all-but-pinned');
+
 		$target = chooseTarget($target);
 		$target.toggleClass('pinned');
+		$pinBtn.find('span').text(countPins);
+		
+		if (countPins() == 0) {
+			$pinBtn.addClass('hide');
+		}else{
+			$pinBtn.removeClass('hide');
+		}
+	}
+
+	function countPins(){
+		return $(tabClass + '.pinned').length;
 	}
 
 	function onTabContentClick(e){
 		e.preventDefault();
-		setActiveTab($(e.target));
+		setActiveTab($(e.target),false);
 	}
 
-	function setActiveTab($target) {
-		$(tabClass).removeClass('active');
+	function setActiveTab($target,slide) {
 
 		$target = chooseTarget($target);
 
+		$(tabClass).removeClass('active');
 		$target.addClass('active');
+
 		var timer = setTimeout( function(){
-			resizeTabBar();
+			if (slide) {
+				slideToTarget($target);
+			}
 			clearTimeout(timer);
 		}, 200);
 		
+	}
+
+	function onContextMenuClick(e){
+		var
+			targetId 	= $(this).attr('aria-contextmenu'),
+			$target 	= $(targetId),
+			offset 		= $(e.target).offset();
+
+		openContextMenu($target,offset);
+
+		//console.log($target);
+	}
+
+	function openContextMenu($target, offset){
+
+		$target.css({
+			"top": offset.top,
+			"right": offset.right
+		});
+		$target.toggleClass('open');
+
+	}
+	function onNextClick(e){
+		slideTabBar('right');
+	}
+
+	function onPrevClick(e){
+		slideTabBar('left');
+	}
+
+	function slideToTarget($target){
+
+		if ($target) {
+			$target = chooseTarget($target);
+		}else if($(tabClass + '.active').length > 0){
+			$target = $(tabClass + '.active');
+		}else if($(tabClass + '.pinned').length > 0){
+			$target = $(tabClass + '.pinned').eq(0);
+		}
+
+		if (!$target) {
+			positionTabBar(0);
+			return false;
+		}
+
+		var 
+			tabIndex = $target.data('index'),
+			tabsWidth = 0,
+			containerWidth = $(tabWrapperClass).parent().width(),
+			targetXpos = 0;
+
+		$(tabClass).each(function(){
+			tabsWidth = ($(this).width() -32) + tabsWidth;
+		});
+
+		$(tabClass).each(function(index){
+			if (index < tabIndex) {
+				targetXpos = ($(this).width() -32) + targetXpos;
+			}
+		});
+
+		targetXpos = containerWidth - (targetXpos + $target.width() );
+
+		if (tabsWidth >= containerWidth && targetXpos < 0) {
+			
+			positionTabBar(targetXpos);
+
+		} else if(!tabIndex){
+
+			positionTabBar(0);
+		}
+
+
+	}
+
+	function slideTabBar(direction){
+		var 
+			tabWidth = $(tabClass).width() -32,
+			currentTransformPos,
+			targetPos;
+		
+		currentTransformPos = $(tabWrapperClass).css('transform').split(/[()]/)[1];
+		currentTransformPos = currentTransformPos.split(',')[4];
+		targetPos = parseInt(currentTransformPos);
+
+		if (direction == 'right') {
+			targetPos = (targetPos) - (tabWidth*3);
+		}else if(direction == 'left'){
+			targetPos = (targetPos) + (tabWidth*3);
+		}else{
+			console.log('no direction set');
+			return false;
+		}
+
+		if (targetPos > 0) {
+			targetPos = 0;
+		}
+
+		console.log(targetPos);
+		positionTabBar(targetPos);
+
+	}
+
+	function positionTabBar(xpos){
+		$(tabWrapperClass).css('transform', 'translateX('+xpos+'px)');
 	}
 
 	function onCloseClick(e){
@@ -103,15 +229,17 @@
 		}
 
 		$target.addClass('closing');
-
+		
+		$(tabClass).not('.closing').each(function(index){
+				$(this).data('index',index);
+		});
+		
+		
 		var timer = setTimeout( function(){
 			$target.remove();
-			var timer2 = setTimeout(function(){
-				resizeTabBar();
-				clearTimeout(timer2);
-			},200);
+			resizeTabBar();
 			clearTimeout(timer);
-		}, 500);
+		}, 400);
 	}
 
 	function onAddNewClick(e){
@@ -121,13 +249,20 @@
 
 	function cloneRandomTab() {
 		var
-			randomIndex     = Math.floor(Math.random() * $(tabClass).length),
-			$tabClone       = $tabs.eq(randomIndex);
+			randomIndex     = Math.floor(Math.random() * $tabs.length-1),
+			$tabClone       = $tabs.eq(randomIndex),
+			tabIndex		= $(tabClass).length;
 
-		$tabClone.clone()
-				 .removeClass('active pinned closing')
-				 .appendTo($(tabWrapperClass));
+		
 
+		var $newTab = $tabClone.clone()
+						.addClass('active')
+						.removeClass('pinned closing')
+						.attr('data-index', tabIndex)
+						.appendTo($(tabWrapperClass));
+
+		setActiveTab($newTab,false);
+		
 		resizeTabBar();
 	}
 
@@ -135,14 +270,19 @@
 		var
 			tabsWidth = 0;
 
-		$(tabClass).each(function(){
+		$(tabClass).not('.closing').each(function(){
 			tabsWidth = ($(this).width() -32) + tabsWidth;
 		});
 
-		toggleCondenseClass(tabsWidth);
+		console.log(tabsWidth);
+
+		//toggleCondenseClass(tabsWidth);
+		slideToTarget();
 
 		$(tabWrapperClass).width(tabsWidth);
 	}
+
+
 
 	function toggleCondenseClass(tabsWidth){
 		var
@@ -164,7 +304,7 @@
 			iAmDouble = false;
 			iAmSuper = true;
 			
-			console.log('super-condensed: ' + tabsWidth);
+			//console.log('super-condensed: ' + tabsWidth);
 
 		} else if(tabsWidth > containerWidth && tabsWidth <= doubleWidth && !iAmSuper || iAmDouble ) {
 			$(tabWrapperClass)
@@ -174,7 +314,7 @@
 			iAmDouble = true;
 			iAmSuper = false;
 
-			console.log('condensed: ' + tabsWidth);
+			//console.log('condensed: ' + tabsWidth);
 		}else{
 			$(tabWrapperClass)
 				.removeClass('condensed super-condensed');
@@ -182,7 +322,7 @@
 			iAmSuper = false;
 			iAmDouble = false;
 
-			console.log('normal: ' + tabsWidth);
+			//console.log('normal: ' + tabsWidth);
 		}
 	}
 
