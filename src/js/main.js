@@ -22,7 +22,7 @@
 		$(d).on('click', '.close-all-but-pinned', onKeepPinnedClick);
 		$(d).on('click', 'button.navigate-right', onNextClick);
 		$(d).on('click', 'button.navigate-left', onPrevClick);
-		$(d).on('click', 'button.toggle-context-menu', onContextMenuClick);
+		//$(d).on('click', 'button.toggle-context-menu', onContextMenuClick);
 
 		//Tab clicks
 		$(d).on('click', '.tab-content', onTabContentClick);
@@ -35,17 +35,21 @@
 		$(tabWrapperClass).sortable({
 				axis: "x",
 				placeholder: "tab placeholder",
+				containment: "parent",
 				sort: function( event, ui ) {
-					$(tabClass).addClass('sorting-tab');
+					$(tabWrapperClass).addClass('sorting-tab');
 					ui.item.removeClass('moved');
 					ui.item.addClass('sorting');
 				},
 				stop: function( event, ui ) {
-					$(tabClass).removeClass('sorting-tab');
+					$(tabWrapperClass).removeClass('sorting-tab');
 					ui.item.addClass('moved');
 					ui.item.attr('style','');
 					ui.item.removeClass('sorting');
 				},
+				update: function (event, ui){
+					setTabIndexOrder();
+				}
 		});
 	
 		$(tabClass).disableSelection();
@@ -57,13 +61,17 @@
 	}
 
 	function togglePinned($target) {
-		var $pinBtn = $('.close-all-but-pinned');
-
 		$target = chooseTarget($target);
 		$target.toggleClass('pinned');
+		updatePinCount();
+	}
+
+	function updatePinCount(){
+		var $pinBtn = $('.close-all-but-pinned');
+
 		$pinBtn.find('span').text(countPins);
 		
-		if (countPins() == 0) {
+		if (countPins() == 0 || $(tabClass).not('.pinned').length == 0) {
 			$pinBtn.addClass('hide');
 		}else{
 			$pinBtn.removeClass('hide');
@@ -116,11 +124,41 @@
 
 	}
 	function onNextClick(e){
-		slideTabBar('right');
+		slideTabBar(3);
 	}
 
 	function onPrevClick(e){
-		slideTabBar('left');
+		slideTabBar(-3);
+	}
+
+	function slideTabBar(steps){
+		var 
+			tabWidth = $(tabClass).width()-32,
+			currentTransformPos,
+			targetPos;
+		
+		currentTransformPos = $(tabWrapperClass).css('transform').split(/[()]/)[1];
+		currentTransformPos = currentTransformPos.split(',')[4];
+		targetPos = parseInt(currentTransformPos);
+
+		targetPos = targetPos - (tabWidth*steps);
+		
+		console.log(steps);
+
+		if(steps < 0){
+			steps = steps *=-1;
+			targetPos = targetPos + (tabWidth*steps);
+		}
+
+		console.log(targetPos);
+
+		if (targetPos > 0) {
+			targetPos = 0;
+		}
+
+		
+		positionTabBar(targetPos);
+
 	}
 
 	function slideToTarget($target){
@@ -168,33 +206,7 @@
 
 	}
 
-	function slideTabBar(direction){
-		var 
-			tabWidth = $(tabClass).width() -32,
-			currentTransformPos,
-			targetPos;
-		
-		currentTransformPos = $(tabWrapperClass).css('transform').split(/[()]/)[1];
-		currentTransformPos = currentTransformPos.split(',')[4];
-		targetPos = parseInt(currentTransformPos);
 
-		if (direction == 'right') {
-			targetPos = (targetPos) - (tabWidth*3);
-		}else if(direction == 'left'){
-			targetPos = (targetPos) + (tabWidth*3);
-		}else{
-			console.log('no direction set');
-			return false;
-		}
-
-		if (targetPos > 0) {
-			targetPos = 0;
-		}
-
-		console.log(targetPos);
-		positionTabBar(targetPos);
-
-	}
 
 	function positionTabBar(xpos){
 		$(tabWrapperClass).css('transform', 'translateX('+xpos+'px)');
@@ -208,16 +220,21 @@
 	function onCloseAllClick(e){
 		e.preventDefault();
 		closeTabs($(tabClass));
+		removeCondenseClass();
 	}
 
 	function onKeepActiveClick(e){
 		e.preventDefault();
 		closeTabs($(tabClass),'.active');
+		removeCondenseClass();
 	}
 
 	function onKeepPinnedClick(e){
 		e.preventDefault();
 		closeTabs($(tabClass),'.pinned');
+		if ($(tabClass + '.pinned').length < 6) {
+			removeCondenseClass();
+		}
 	}
 
 	function closeTabs($target,exceptThis) {
@@ -230,14 +247,13 @@
 
 		$target.addClass('closing');
 		
-		$(tabClass).not('.closing').each(function(index){
-				$(this).data('index',index);
-		});
+		setTabIndexOrder('.closing');
 		
 		
 		var timer = setTimeout( function(){
 			$target.remove();
 			resizeTabBar();
+			updatePinCount();
 			clearTimeout(timer);
 		}, 400);
 	}
@@ -245,6 +261,7 @@
 	function onAddNewClick(e){
 		e.preventDefault();
 		cloneRandomTab();
+		updatePinCount();
 	}
 
 	function cloneRandomTab() {
@@ -266,6 +283,13 @@
 		resizeTabBar();
 	}
 
+	function setTabIndexOrder(exceptThis){
+		$(tabClass).not(exceptThis).each(function(index){
+			$(this).data('index', index);
+			console.log('s');
+		});
+	}
+
 	function resizeTabBar(){
 		var
 			tabsWidth = 0;
@@ -274,9 +298,7 @@
 			tabsWidth = ($(this).width() -32) + tabsWidth;
 		});
 
-		console.log(tabsWidth);
-
-		//toggleCondenseClass(tabsWidth);
+		toggleCondenseClass(tabsWidth);
 		slideToTarget();
 
 		$(tabWrapperClass).width(tabsWidth);
@@ -316,14 +338,18 @@
 
 			//console.log('condensed: ' + tabsWidth);
 		}else{
+			removeCondenseClass();
+
+			//console.log('normal: ' + tabsWidth);
+		}
+	}
+
+	function removeCondenseClass(){
 			$(tabWrapperClass)
 				.removeClass('condensed super-condensed');
 
 			iAmSuper = false;
 			iAmDouble = false;
-
-			//console.log('normal: ' + tabsWidth);
-		}
 	}
 
 	function chooseTarget($target) {

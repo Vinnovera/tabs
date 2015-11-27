@@ -43,6 +43,9 @@
 		transition opacity .06s linear
 	&.active .close
 		background-image url('../images/close_icon_8px_active.svg')
+	&.active
+		color blue
+		background cream
 	
 	//icons
 	&.type-search
@@ -152,7 +155,8 @@
 			opacity 0.5
 			&:hover
 				opacity 1
-	&.sorting 
+	&.sorting
+		position fixed!important
 		.pin::before
 		.close
 			display none
@@ -180,10 +184,10 @@
 		background blue-dark
 		z-index 1
 	&.active
-		color blue
 		z-index 99999
-		bottom 0
+		background none
 		width $tabWidth!important
+		bottom 0
 		&:before
 			background cream
 	&.closing

@@ -2,15 +2,40 @@
 	overflow hidden
 	.tab-bar
 		margin 0
-		position relative
 		padding 30px 0 0 32px
-		//even-blocks(32)
 		min-width 100%
 		height 60px
 		overflow hidden
 		transition transform .3s ease-in-out
-		&:after
+		&::after
 			content ''
 			display block
 			clear both
 			float none
+	&::after
+		content ''
+		position absolute
+		bottom 0
+		z-index 1
+		right 130px
+		width 0
+		height 0
+		border-style solid
+		border-width 0 27px 60px 0
+		border-color transparent blue-dark transparent transparent
+
+			
+	/*&::before
+	&::after
+		content ''
+		width 32px
+		position absolute
+		top 0
+		bottom 0
+		z-index 1
+	&::before
+		left 0
+		background-image linear-gradient(90deg,rgba(blue-dark,1) 4%,rgba(blue-dark,0) 92%)
+	&::after
+		right 130px
+		background-image linear-gradient(90deg,rgba(blue-dark,0) 4%,rgba(blue-dark,1) 92%)*/
