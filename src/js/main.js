@@ -179,9 +179,9 @@
 		if ($target) {
 			$target = chooseTarget($target);
 		}else if($(tabClass + '.active').length > 0){
-			$target = $(tabClass + '.active');
+			$target = $(tabClass + '.active').first();
 		}else if($(tabClass + '.pinned').length > 0){
-			$target = $(tabClass + '.pinned').eq(0);
+			$target = $(tabClass + '.pinned').first();
 		}
 
 		if (!$target) {
@@ -206,13 +206,14 @@
 		});
 
 		targetXpos = containerWidth - (targetXpos + $target.width() );
-
+		console.log($target);
 		if (!returnX) {
 			if (tabsWidth >= containerWidth && targetXpos < 0) {
 				
+				
 				positionTabBar(targetXpos);
 
-			} else if(!tabIndex){
+			} else {
 
 				positionTabBar(0);
 
