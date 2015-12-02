@@ -50,6 +50,7 @@
 				},
 				update: function (event, ui){
 					setTabIndexOrder();
+					//console.log('tabindex');
 				}
 		});
 	
@@ -157,8 +158,6 @@
 			targetPos = targetPos + (tabWidth*steps);
 		}
 
-		
-
 		if (targetPos > 0) {
 			targetPos = 0;
 		}
@@ -167,19 +166,12 @@
 			maxTarget = 0;
 		}
 
-			console.log('target: '+targetPos);
-			console.log('max:' + maxTarget);
-
 		if (tabsWidth >= containerWidth && maxTarget <= targetPos) {
 			positionTabBar(targetPos);
-			
 		}else if(tabsWidth <= containerWidth){
 			slideToTarget($(tabClass).last());
-			console.log('you dont need no scroll');
 		}else{
-			
 			slideToTarget($(tabClass).last());
-			console.log('sliiiide');
 		}
 
 	}
@@ -221,7 +213,6 @@
 			if (tabsWidth >= containerWidth && targetXpos < 0) {
 				
 				positionTabBar(targetXpos);
-				console.log('slidetotarget:' + targetXpos);
 
 			} else if(!tabIndex){
 
@@ -316,8 +307,12 @@
 	}
 
 	function setTabIndexOrder(exceptThis){
-		$(tabClass).not(exceptThis).each(function(index){
-			$(this).data('index', index);
+		var $tabs = $(tabClass);
+		if (exceptThis) {
+			$tabs = $(tabClass).not(exceptThis);
+		}
+		$tabs.each(function(index){
+			$(this).attr('data-index', index);
 		});
 	}
 
