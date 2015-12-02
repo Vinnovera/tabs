@@ -166,11 +166,9 @@
 			maxTarget = 0;
 		}
 
-		if (tabsWidth >= containerWidth && maxTarget <= targetPos) {
+		if (tabsWidth >= containerWidth && maxTarget <= targetPos) { // If there is overflowing tabs in the tab-bar and the target position isn't outside the tabscontainr; scroll to target.
 			positionTabBar(targetPos);
-		}else if(tabsWidth <= containerWidth){
-			slideToTarget($(tabClass).last());
-		}else{
+		}else{ // scroll to last tab.
 			slideToTarget($(tabClass).last());
 		}
 
