@@ -322,7 +322,7 @@ body {
   line-height: 0;
   position: relative;
   cursor: pointer;
-  margin: 4px;
+  margin: 2px;
   box-sizing: border-box;
 }
 *[class^="arrow-"]::after {
@@ -428,8 +428,8 @@ button.hide,
 .tab .close {
   position: absolute;
   text-indent: -9999px;
-  top: 9px;
-  right: 15%;
+  top: 10px;
+  right: 16.5%;
   background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgd2lkdGg9IjhweCIgaGVpZ2h0PSI4cHgiIHZpZXdCb3g9IjAgMCA4IDgiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgPgogICAgPGRlZnM+PC9kZWZzPgogICAgPGcgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCIgPgogICAgICAgIDxwYXRoIGZpbGw9IiNGN0Y0RUMiIGQ9Ik0yLjQ0OTMwMzg1LDMuOTY2MjU2MiBMMC4yNzM1NjUzMzIsMS43OTA1MTc2OCBDLTAuMTI1ODk1NjQ0LDEuMzkxMDU2NzEgLTAuMTIzMDQ2NDI0LDAuNzYxMDQxNzMgMC4yNjcyOTIzNTEsMC4zNzA3MDI5NTUgTDAuMzc0MTE0NjUxLDAuMjYzODgwNjU1IEMwLjc1ODQ1NTQxNCwtMC4xMjA0NjAxMDggMS40MDAxMjYxMywtMC4xMjM2NDk2MSAxLjc5MzkyOTM4LDAuMjcwMTUzNjM3IEwzLjk2OTY2NzksMi40NDU4OTIxNSBMNi4xNDU0MDY0MSwwLjI3MDE1MzYzNyBDNi41MzkyMDk2NiwtMC4xMjM2NDk2MSA3LjE4MDg4MDM4LC0wLjEyMDQ2MDEwOCA3LjU2NTIyMTE0LDAuMjYzODgwNjU1IEw3LjY3MjA0MzQ0LDAuMzcwNzAyOTU1IEM4LjA2MjM4MjIyLDAuNzYxMDQxNzMgOC4wNjUyMzE0NCwxLjM5MTA1NjcxIDcuNjY1NzcwNDYsMS43OTA1MTc2OCBMNS40OTAwMzE5NCwzLjk2NjI1NjIgTDcuNjY1NzcwNDYsNi4xNDE5OTQ3MiBDOC4wNjUyMzE0NCw2LjU0MTQ1NTcgOC4wNjIzODIyMiw3LjE3MTQ3MDY3IDcuNjcyMDQzNDQsNy41NjE4MDk0NSBMNy41NjUyMjExNCw3LjY2ODYzMTc1IEM3LjE4MDg4MDM4LDguMDUyOTcyNTEgNi41MzkyMDk2Niw4LjA1NjE2MjAxIDYuMTQ1NDA2NDEsNy42NjIzNTg3NiBMMy45Njk2Njc5LDUuNDg2NjIwMjUgTDEuNzkzOTI5MzgsNy42NjIzNTg3NiBDMS40MDAxMjYxMyw4LjA1NjE2MjAxIDAuNzU4NDU1NDE0LDguMDUyOTcyNTEgMC4zNzQxMTQ2NTEsNy42Njg2MzE3NSBMMC4yNjcyOTIzNTEsNy41NjE4MDk0NSBDLTAuMTIzMDQ2NDI0LDcuMTcxNDcwNjcgLTAuMTI1ODk1NjQ0LDYuNTQxNDU1NyAwLjI3MzU2NTMzMiw2LjE0MTk5NDcyIEwyLjQ0OTMwMzg1LDMuOTY2MjU2MiBaIiAgID48L3BhdGg+CiAgICA8L2c+Cjwvc3ZnPg==") no-repeat center center;
   width: 12px;
   height: 12px;
@@ -498,7 +498,7 @@ button.hide,
   height: 14px;
   position: absolute;
   background: #465760;
-  top: -6px;
+  top: -4px;
   z-index: 10;
   opacity: 0;
   left: 50%;
@@ -566,6 +566,7 @@ button.hide,
 }
 .tab-bar .tab.sorting {
   position: fixed !important;
+  animation-name: none;
 }
 .tab-bar .tab.sorting .pin::before,
 .tab-bar .tab.sorting .close {

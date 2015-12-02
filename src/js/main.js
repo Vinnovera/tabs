@@ -36,6 +36,7 @@
 				axis: "x",
 				placeholder: "tab placeholder",
 				containment: "parent",
+				delay: 180,
 				sort: function( event, ui ) {
 					$(tabWrapperClass).addClass('sorting-tab');
 					ui.item.removeClass('moved');
@@ -124,44 +125,66 @@
 
 	}
 	function onNextClick(e){
-		slideTabBar(3);
+		slideTabBar(2);
 	}
 
 	function onPrevClick(e){
-		slideTabBar(-3);
+		slideTabBar(-2);
 	}
 
 	function slideTabBar(steps){
 		var 
 			tabWidth = $(tabClass).width()-32,
 			currentTransformPos,
-			targetPos;
+			targetPos,
+			maxTarget = slideToTarget($(tabClass).last(), true) - tabWidth,
+			tabsWidth = 0,
+			containerWidth = $(tabWrapperClass).parent().width();
+			
+
+		$(tabClass).each(function(){
+			tabsWidth = ($(this).width() -32) + tabsWidth;
+		});
 		
 		currentTransformPos = $(tabWrapperClass).css('transform').split(/[()]/)[1];
 		currentTransformPos = currentTransformPos.split(',')[4];
 		targetPos = parseInt(currentTransformPos);
 
 		targetPos = targetPos - (tabWidth*steps);
-		
-		console.log(steps);
 
 		if(steps < 0){
 			steps = steps *=-1;
 			targetPos = targetPos + (tabWidth*steps);
 		}
 
-		console.log(targetPos);
+		
 
 		if (targetPos > 0) {
 			targetPos = 0;
 		}
 
-		
-		positionTabBar(targetPos);
+		if (maxTarget > 0) {
+			maxTarget = 0;
+		}
+
+			console.log('target: '+targetPos);
+			console.log('max:' + maxTarget);
+
+		if (tabsWidth >= containerWidth && maxTarget <= targetPos) {
+			positionTabBar(targetPos);
+			
+		}else if(tabsWidth <= containerWidth){
+			slideToTarget($(tabClass).last());
+			console.log('you dont need no scroll');
+		}else{
+			
+			slideToTarget($(tabClass).last());
+			console.log('sliiiide');
+		}
 
 	}
 
-	function slideToTarget($target){
+	function slideToTarget($target, returnX){
 
 		if ($target) {
 			$target = chooseTarget($target);
@@ -194,13 +217,22 @@
 
 		targetXpos = containerWidth - (targetXpos + $target.width() );
 
-		if (tabsWidth >= containerWidth && targetXpos < 0) {
-			
-			positionTabBar(targetXpos);
+		if (!returnX) {
+			if (tabsWidth >= containerWidth && targetXpos < 0) {
+				
+				positionTabBar(targetXpos);
+				console.log('slidetotarget:' + targetXpos);
 
-		} else if(!tabIndex){
+			} else if(!tabIndex){
 
-			positionTabBar(0);
+				positionTabBar(0);
+
+			}
+		
+		}else{
+
+			return targetXpos;
+
 		}
 
 
@@ -286,7 +318,6 @@
 	function setTabIndexOrder(exceptThis){
 		$(tabClass).not(exceptThis).each(function(index){
 			$(this).data('index', index);
-			console.log('s');
 		});
 	}
 
@@ -299,7 +330,13 @@
 		});
 
 		toggleCondenseClass(tabsWidth);
-		slideToTarget();
+
+		var timer = setTimeout( function(){
+
+				slideToTarget();
+	
+			clearTimeout(timer);
+		}, 50);
 
 		$(tabWrapperClass).width(tabsWidth);
 	}
