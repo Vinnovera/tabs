@@ -396,6 +396,7 @@ button,
   border-radius: 3px;
   box-shadow: 1px 2px 0px rgba(0,0,0,0.5);
   cursor: pointer;
+  transition: background-color 60ms linear;
 }
 button:active,
 .button:active,
@@ -424,6 +425,11 @@ button.highlight,
 .btn.highlight {
   background: #0681c6;
   color: #fff;
+}
+button.highlight:hover,
+.button.highlight:hover,
+.btn.highlight:hover {
+  background: #0798ea;
 }
 button:disabled,
 .button:disabled,
@@ -749,7 +755,7 @@ button:disabled:active,
   position: absolute;
   left: 12px;
   top: 3px;
-  opacity: 0.3;
+  opacity: 0.5;
   z-index: 1;
 }
 .aid-field button {
@@ -794,16 +800,17 @@ button:disabled:active,
 .aid-field input[type=search]:focus {
   box-shadow: inset 0 0 3px 1px #465760;
   background: #fff;
-  padding-left: 1em;
+  padding-left: 0.6em;
   z-index: 2;
 }
 .aid-field.input-is-valid input[type=search] {
-  width: 154px;
-  margin-right: 34px;
+  width: 156px;
+  margin-right: 32px;
   color: #000;
   background: #f7f4ec;
-  padding-left: 1em;
+  padding-left: 0.6em;
   font-weight: bold;
+  z-index: 2;
 }
 .aid-field.input-is-valid input[type=search]:focus {
   background: #fff;

@@ -12,6 +12,7 @@ button
 	border-radius 3px
 	box-shadow 1px 2px 0px rgba(0,0,0,0.5)
 	cursor pointer
+	transition background-color 60ms linear
 	&:hover
 		//background lighten(@background, 20%)
 	&:active
@@ -27,6 +28,8 @@ button
 	&.highlight
 		background blue-light
 		color white
+		&:hover
+			background lighten(@background, 12%)
 	&:disabled
 		opacity 0.6
 		box-shadow none
