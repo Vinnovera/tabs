@@ -4,16 +4,16 @@ button
 .btn
 	font-family sans_serif
 	border 0
-	padding 10px
+	padding 6px
 	background white
 	color black
-	margin 10px
+	margin 3px 10px 3px 0
 	position relative
 	border-radius 3px
 	box-shadow 1px 2px 0px rgba(0,0,0,0.5)
-	outline 0
+	cursor pointer
 	&:hover
-		background darken(white, 20%)
+		//background lighten(@background, 20%)
 	&:active
 		top 2px
 		box-shadow 1px 1px 0px rgba(0,0,0,0.5)
@@ -24,3 +24,17 @@ button
 			background darken(orange, 20%)
 	&.hide
 		display none
+	&.highlight
+		background blue-light
+		color white
+	&:disabled
+		opacity 0.6
+		box-shadow none
+		&:active
+			top 0
+.btn--small
+	padding .2em 1em .1em
+	border-radius 20px
+	font-weight bold
+	font-size 1em
+	line-height 2em

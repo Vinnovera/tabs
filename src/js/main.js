@@ -3,6 +3,7 @@
 	var
 		iAmSuper    	= false,
 		iAmDouble	 	= false,
+		leftMargin		= 32,
 		tabWrapperClass = '.tab-bar',
 		tabClass		= '.tab',
 		tabClass    	= tabWrapperClass + ' ' +tabClass,
@@ -20,8 +21,10 @@
 		$(d).on('click', '.close-all', onCloseAllClick);
 		$(d).on('click', '.close-all-but-active', onKeepActiveClick);
 		$(d).on('click', '.close-all-but-pinned', onKeepPinnedClick);
+		$(d).on('click', '.slim-toggle', toggleSlimTabs);
 		$(d).on('click', 'button.navigate-right', onNextClick);
 		$(d).on('click', 'button.navigate-left', onPrevClick);
+		$(d).on('input', '.aid-field input', onAidChange);
 		//$(d).on('click', 'button.toggle-context-menu', onContextMenuClick);
 
 		//Tab clicks
@@ -135,7 +138,7 @@
 
 	function slideTabBar(steps){
 		var 
-			tabWidth = $(tabClass).width()-32,
+			tabWidth = $(tabClass).width()-leftMargin,
 			currentTransformPos,
 			targetPos,
 			maxTarget = slideToTarget($(tabClass).last(), true) - tabWidth,
@@ -144,7 +147,7 @@
 			
 
 		$(tabClass).each(function(){
-			tabsWidth = ($(this).width() -32) + tabsWidth;
+			tabsWidth = ($(this).width() - leftMargin) + tabsWidth;
 		});
 		
 		currentTransformPos = $(tabWrapperClass).css('transform').split(/[()]/)[1];
@@ -196,12 +199,12 @@
 			targetXpos = 0;
 
 		$(tabClass).each(function(){
-			tabsWidth = ($(this).width() -32) + tabsWidth;
+			tabsWidth = ($(this).width() - leftMargin) + tabsWidth;
 		});
 
 		$(tabClass).each(function(index){
 			if (index < tabIndex) {
-				targetXpos = ($(this).width() -32) + targetXpos;
+				targetXpos = ($(this).width() - leftMargin) + targetXpos;
 			}
 		});
 
@@ -258,6 +261,28 @@
 			removeCondenseClass();
 		}
 	}
+
+	function toggleSlimTabs(e){
+		e.preventDefault();
+		$(tabWrapperClass).toggleClass('slim');
+		if ($(tabWrapperClass).is('.slim')) {
+			leftMargin = 23;
+		}else{
+			leftMargin = 32;
+		}
+		resizeTabBar();
+	}
+
+	function onAidChange(e){
+		$('.aid-field').removeClass('input-is-valid');
+		$('.aid-field .btn--submit').removeClass('highlight').attr('disabled', 'disabled');
+		if ($(this).val().search('v') >= 0) {
+			$('.aid-field').addClass('input-is-valid');
+			$('.aid-field .btn--submit').addClass('highlight').removeAttr('disabled');
+			//add disabled
+		}
+	}
+
 
 	function closeTabs($target,exceptThis) {
 		
@@ -317,11 +342,18 @@
 
 	function resizeTabBar(){
 		var
-			tabsWidth = 0;
+			tabsWidth = 0,
+			containerWidth = $(tabWrapperClass).parent().width();
 
 		$(tabClass).not('.closing').each(function(){
-			tabsWidth = ($(this).width() -32) + tabsWidth;
+			tabsWidth = ($(this).width() - leftMargin) + tabsWidth;
 		});
+
+		if (tabsWidth > containerWidth) {
+			$('.navigate-right, .navigate-left').removeAttr('disabled');
+		}else{
+			$('.navigate-right, .navigate-left').attr('disabled', 'disabled');
+		}
 
 		toggleCondenseClass(tabsWidth);
 
@@ -345,7 +377,7 @@
 		if (!tabsWidth) {
 			tabsWidth = 0;
 			$(tabClass).each(function(){
-				tabsWidth = ($(this).width() -32) + tabsWidth;
+				tabsWidth = ($(this).width() - leftMargin) + tabsWidth;
 			});
 		}
 

@@ -1,0 +1,68 @@
+.aid-field
+	position relative
+	margin 3px 10px 3px 0
+	display block
+	
+	&.icon-jumpto::before
+		position absolute
+		left 12px
+		top 3px
+		opacity .3
+		z-index 1
+	button
+		margin 0
+		color white
+		background blue
+		&.copy
+			border-radius 0
+			background brown
+			position absolute
+			display none
+			top 0
+			min-width 30px
+			right 66px
+			z-index 3
+			text-indent -9999px
+			padding 0.2em .5em 0.1em
+			&:active
+				top 0px
+		&.btn--submit
+			border-radius 0 20px 20px 0
+			
+	input[type=search]
+		border-radius 20px 0 0 20px
+		font-size 1em
+		padding .3em .4em .4em 2em
+		box-shadow none
+		border 0
+		line-height 1.5em
+		width 190px
+		outline 0
+		border none
+		background blue
+		background-repeat no-repeat
+		background-position left center
+		color grey
+		position relative
+		&:focus
+			box-shadow inset 0 0 3px 1px blue
+			background white
+			padding-left 1em
+			z-index 2
+			
+	&.input-is-valid
+		input[type=search]
+			width 154px
+			margin-right 34px
+			color black
+			background cream
+			padding-left 1em
+			font-weight bold
+			&:focus
+				background white
+				font-weight normal
+		.copy
+			display block
+		
+			
+		

@@ -5,6 +5,7 @@
 	position relative
 	cursor pointer
 	overflow hidden
+	font-size 11px
 	.tab-content
 	.close
 		z-index 2
@@ -17,7 +18,7 @@
 			font-weight bold
 			font-size 1.12em
 			padding 2px 0 1px
-			line-height 19px
+			line-height 16px
 			&::before
 				content ''
 				position relative
@@ -214,19 +215,42 @@
 		bottom -9px
 	&.moved
 		animation-name none
-	/.condensed .tab
+	/.tab-bar.condensed .tab
 		width $tabWidthCondensed
 		&.closing
 			animation-name fadeOutTabCondensed!important
 			&.active
 				animation-name fadeOutTab!important
-	/.super-condensed .tab
-	/.condensed.super-condensed .tab
+	/.tab-bar.super-condensed .tab
+	/.tab-bar.condensed.super-condensed .tab
 		width $tabWidthSuperCondensed
 		&.closing
 			animation-name fadeOutTabSuperCondensed!important
 			&.active
 				animation-name fadeOutTab!important
+	/.tab-bar.slim .tab
+		height 41px
+		margin-left -23px
+		&.active
+			bottom -2px
+		//Polygon Shape background
+		&:before
+		&:after
+			content ''
+			position absolute
+			-webkit-clip-path polygon(8% 0, 92% 0, 100% 100%, 0 100%)
+			clip-path polygon(8% 0, 92% 0, 100% 100%, 0 100%)
+		.tab-content
+			margin 1px 12% 0
+			.title
+				font-size 1.1em
+				line-height 1.1em
+				&::before,
+				.icon
+					height 1em
+					margin-top -2px
+			.subtitle
+				display none
+		.close
+			right 10%
 		
-	
-	
